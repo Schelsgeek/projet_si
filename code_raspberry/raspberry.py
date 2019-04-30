@@ -11,9 +11,6 @@ class Arduino(SMBus):
         self.src="/home/pi/projet_si/code_raspberry/"+path_src
         self.dst="/home/pi/projet_si/code_raspberry/"+path_dst
         self.list=[]
-        f=open(self.src,"r")
-	#on cree une list des uid autorisé
-        [self.list.append(i[:-1].ljust(8,"0")) for i in f]
     def __str__(self):
         return "Arduino sur l'addresse {}".format(self.addr)
     #envoyer les uids
@@ -23,6 +20,9 @@ class Arduino(SMBus):
         os.popen("bash -c '/home/pi/projet_si/code_bash/recv_user.sh'").close()
         f=open(self.src,"r")
         for i in f:
+            #on rafraichie la liste
+            #des uid autorisé
+            self.list.append(i[:-1].ljust(8,"0"))
             #on lie les uid et on enlève le \n (retour ligne) d'ou le [:1]
             self.write_i2c_block_data(self.addr,1,i[:-1].ljust(8,"0").encode())
             time.sleep(0.6)
@@ -30,15 +30,13 @@ class Arduino(SMBus):
         f.close()
     #recurer les uid dans un fichier
     def recv_users(self):
-	#on verifie que la carte est deja récupe les iuds
-        if not self.read_byte(self.addr): self.send_allow_users()
         f=open(self.dst,"a")
         while True:
             now=datetime.datetime.now()
             uid=""
             recv=self.read_i2c_block_data(self.addr,3,8)
-            if recv==[1 for x in range(8)]:
-                break
+            if recv==[0 for x in range(8)]: self.send_allow_users()
+            elif recv==[1 for x in range(8)]: break
             for i in range(len(recv)):
                 uid+=chr(recv[i])
             f.write(str(uid)+"-"+str(now.year)+"-"+str(now.hour)+"-"+str(now.minute)+"-"+str(uid in self.list)+"\n")
