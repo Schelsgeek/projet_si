@@ -192,9 +192,7 @@ void send_uid_users(){
           //le 9 permet de prendre l'uid + le /0 de find de str
           char buff[9]="";
           buffer_users[compteur_uid_send].toCharArray(buff,9);
-          Serial.println(String(buff));
           Wire.write(buff,8);
-          Serial.println("send");
           if(!(buffer_users[0]==""))compteur_uid_send++;
         }
 }
