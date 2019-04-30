@@ -17,6 +17,7 @@ MFRC522 rfid(SS_PIN, RST_PIN); // On instancie un MFRC522
 char separateur="-";
 int dataReceived = 0;
 int flag_users=0;
+byte zero[8]={0,0,0,0,0,0,0,0};
 String buffer_uid="";
 String buffer_uid_users="";
 String *allow_users=NULL;
@@ -72,7 +73,7 @@ void loop() {
     nb_buffer_users++;
     delay(5000);
 }
-
+//donné recu par l'arduino
 void receiveData(int byteCount){
     while(Wire.available()) {
         dataReceived = Wire.read();
@@ -87,20 +88,22 @@ void receiveData(int byteCount){
            flag_users=1;  
            break;
           case(3):
-           flag_users=1;  
+           if(flag_users!=0){
+            flag_users=3;  
+           }
       } 
     }
 }
-
+//donné envoyé
 void sendData(){
     //switch
     switch(flag_users){
       //cas reception
       case(0):
-        Wire.write(0);
+        Wire.write(zero,8);
         break;
       //cas envoie donnée  buffer_users
-      case(1):
+      case(3):
         send_uid_users();
         break;
     }
@@ -150,7 +153,6 @@ void init_allow_users(){
   for(int i=0;i<(buffer_nb_allow_users*9);i++){
     if(buffer_uid_users[i]==separateur){
       allow_users[c]=buffer;
-      Serial.println(buffer);
       buffer="";
       c++;
     }
@@ -176,13 +178,8 @@ void send_uid_users(){
   // init compteur
   static int compteur_uid_send=0;
   byte un[8]={1,1,1,1,1,1,1,1};
-  Serial.println(compteur_uid_send);
-  Serial.println(nb_buffer_users);
-  //clear buffer
-  if((compteur_uid_send==0) && (nb_buffer_users==0)){
-    Wire.write(un,8);
-    return;
-  }
+
+        //clear buffer
         if(compteur_uid_send==nb_buffer_users){
            nb_buffer_users=0;
            for(int i=0;i<TAILLE_TAB;i++){
@@ -195,6 +192,7 @@ void send_uid_users(){
           //le 9 permet de prendre l'uid + le /0 de find de str
           char buff[9]="";
           buffer_users[compteur_uid_send].toCharArray(buff,9);
+          Serial.println(String(buff));
           Wire.write(buff,8);
           Serial.println("send");
           if(!(buffer_users[0]==""))compteur_uid_send++;
