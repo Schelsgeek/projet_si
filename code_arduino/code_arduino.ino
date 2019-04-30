@@ -37,7 +37,7 @@ void setup() {
 }
 
 void loop() {
-    delay(50);
+    delay(100);
     lcd.clear();
     lcd.backlight();//initialisation du retroéclairage
     //on check que les iud soit importé
@@ -175,13 +175,19 @@ void wait(){
 void send_uid_users(){
   // init compteur
   static int compteur_uid_send=0;
+  byte un[8]={1,1,1,1,1,1,1,1};
+  Serial.println(compteur_uid_send);
+  Serial.println(nb_buffer_users);
   //clear buffer
+  if((compteur_uid_send==0) && (nb_buffer_users==0)){
+    Wire.write(un,8);
+    return;
+  }
         if(compteur_uid_send==nb_buffer_users){
            nb_buffer_users=0;
            for(int i=0;i<TAILLE_TAB;i++){
               buffer_users[i]=""; 
            }
-           byte un[8]={1,1,1,1,1,1,1,1};
            compteur_uid_send=0;
            Wire.write(un,8);
         }
@@ -190,6 +196,7 @@ void send_uid_users(){
           char buff[9]="";
           buffer_users[compteur_uid_send].toCharArray(buff,9);
           Wire.write(buff,8);
+          Serial.println("send");
           if(!(buffer_users[0]==""))compteur_uid_send++;
         }
 }
