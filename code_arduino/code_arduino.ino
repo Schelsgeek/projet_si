@@ -21,7 +21,7 @@ byte zero[8]={0,0,0,0,0,0,0,0};
 String last_user="";
 String buffer_uid="";
 String buffer_uid_users="";
-String *allow_users=NULL;
+String *allow_users=NULL;//pointeur
 unsigned int nb_allow_users=0;
 unsigned int buffer_nb_allow_users=0;
 
@@ -86,13 +86,13 @@ void receiveData(int byteCount){
             break;
           case(2):
            init_allow_users();
-           flag_users=1;  
+           flag_users=1;
            break;
           case(3):
            if(flag_users!=0){
-            flag_users=3;  
+            flag_users=3;
            }
-      } 
+      }
     }
 }
 //donné envoyé
@@ -160,7 +160,7 @@ void init_allow_users(){
     }
     else buffer+=buffer_uid_users[i];
   }
-  buffer_uid_users=""; 
+  buffer_uid_users="";
   nb_allow_users=buffer_nb_allow_users;
   buffer_nb_allow_users=0;
 }
@@ -185,7 +185,7 @@ void send_uid_users(){
         if(compteur_uid_send==nb_buffer_users){
            nb_buffer_users=0;
            for(int i=0;i<TAILLE_TAB;i++){
-              buffer_users[i]=""; 
+              buffer_users[i]="";
            }
            compteur_uid_send=0;
            Wire.write(un,8);
