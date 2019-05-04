@@ -38,9 +38,11 @@ class Arduino(SMBus):
             elif recv==[1 for x in range(8)]: break
             for i in range(len(recv)):
                 uid+=chr(recv[i])
+            if len(uid)!=8:break
             f.write("1"+"-"+str(uid)+"\n")
             time.sleep(0.6)
         f.close()
+        return 1
     #récupération des donné
     def recv_data(self):
         f=open(self.dst,"a")
@@ -57,8 +59,7 @@ if __name__=="__main__":
             while True:
                 try:
                     time.sleep(20)
-                    arduino.recv_users()
-                    arduino.fetch()
+                    if arduino.recv_users():arduino.fetch()
                 except:
                     time.sleep(2)
                     arduino.send_allow_users()
