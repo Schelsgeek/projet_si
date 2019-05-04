@@ -59,7 +59,6 @@ if __name__=="__main__":
                     time.sleep(20)
                     arduino.recv_users()
                     arduino.fetch()
-
                 except:
                     time.sleep(2)
                     arduino.send_allow_users()
