@@ -39,7 +39,7 @@ class Arduino(SMBus):
             elif recv==[1 for x in range(8)]: break
             for i in range(len(recv)):
                 uid+=chr(recv[i])
-            f.write(str(uid)+"-"+str(now.year)+"-"+str(now.hour)+"-"+str(now.minute)+"-"+str(uid in self.list)+"\n")
+            f.write(str(uid)+"-"+str(now.year)+"-"+str(now.hour)+"-"+str(now.minute)+"\n")
             time.sleep(0.6)
         f.close()
 #on instancie un objet de la class
