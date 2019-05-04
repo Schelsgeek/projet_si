@@ -32,7 +32,6 @@ class Arduino(SMBus):
     def recv_users(self):
         f=open(self.dst,"a")
         while True:
-            now=datetime.datetime.now()
             uid=""
             recv=self.read_i2c_block_data(self.addr,3,8)
             if recv==[0 for x in range(8)]: self.send_allow_users()
@@ -42,6 +41,10 @@ class Arduino(SMBus):
             f.write("1"+"-"+str(uid)+"\n")
             time.sleep(0.6)
         f.close()
+    #récupération des donné
+    def recv_data(self):
+        f=open(self.dst,"a")
+        uid=""
 #on instancie un objet de la class
 if __name__=="__main__":
     arduino=Arduino(0x12,path_src="allow_users.txt",path_dst="log_users.txt")
