@@ -16,7 +16,7 @@ class Arduino(SMBus):
     #envoyer les uids
     def send_allow_users(self):
         self.write_byte(self.addr,0)
-        #a changer
+        #on récupére les iuds sur le serve
         os.popen("bash -c '/home/pi/projet_si/code_bash/recv_user.sh'").close()
         f=open(self.src,"r")
         for i in f:
@@ -45,6 +45,9 @@ class Arduino(SMBus):
     def recv_data(self):
         f=open(self.dst,"a")
         uid=""
+    #synchronisation serveur
+    def fetch(self):
+        os.popen("bash -c '/home/pi/projet_si/code_bash/send_data.sh'").close()
 #on instancie un objet de la class
 if __name__=="__main__":
     arduino=Arduino(0x12,path_src="allow_users.txt",path_dst="log_users.txt")
@@ -55,6 +58,7 @@ if __name__=="__main__":
                 try:
                     time.sleep(20)
                     arduino.recv_users()
+                    arduino.fetch()
 
                 except:
                     time.sleep(2)

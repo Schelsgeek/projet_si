@@ -38,3 +38,4 @@ Chambre_froide(hydrometri=\"${array[n]}\",temperature=\"${array[n]}\",last_user=
 
 done
 IFS=" "
+rm $path;touch $path
