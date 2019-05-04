@@ -18,6 +18,7 @@ char separateur="-";
 int dataReceived = 0;
 int flag_users=0;
 byte zero[8]={0,0,0,0,0,0,0,0};
+String last_user="";
 String buffer_uid="";
 String buffer_uid_users="";
 String *allow_users=NULL;
@@ -124,6 +125,7 @@ void allow(){
   lcd.print("Allow");
   lcd.setCursor(0,1);
   lcd.print(buffer_users[nb_buffer_users]);
+  last_user=buffer_uid;
 }
 //fonction de vérification element in tab
 bool check_in(String check,String tab[],int nb){
